@@ -1,0 +1,53 @@
+This is a project to trade via Robinhood API.
+
+1. INITIAL CONCEPT
+- Use Tensorflow to create a Recurrent Neural Network to include time as a factor for making trading decisions
+- RNNs are difficult to train and are usually unstable with lots of data
+- Feature Matrix will include various fundamental data and technical data points:
+    - P/E, EPS, Beta, Weighted Moving Avg, Volume, Adj Closing price
+- Bot will pull data from a MongoDB @ morning and write new data to the DB @ night
+- We will train on historical data to predict daily movements on each new day
+- We start with $X with $X/2 invested in 'SABR'
+- Using our new feature set we will make a decision on if the price will go up or down comparing t+1 close to t close price
+- Robinhood will only allow a purchase/sale of that same stock 1 per day
+- We make the prediction at 8:00am (1 hour before market open):
+    - if prediction is UP we will sell shares at 3:30pm (to allow a sale of the stock before day end)
+    - if prediction is DOWN we will but shares at 3:30pm (to allow purchase of the stock)
+    - for more fun we can use a % UP or DOWN to change the size of the position
+        - E.g. if a high % change we will move more of the position and if lower we will move less of the position
+- We will error check with the size of cash in the account
+- When actual close price is not what we had predicted we will use a backpropagation algorithm to adjust theta in the NN
+
+2.
+- I will use several Algorithms and use MSE to compare the algorithm accuracy. I use MSE because it is more sensitive to outliers
+ thus we need to be sensitive to the variance and volatility of the stock.
+- The following data set includes these /day:
+    - Adj Close
+    - Open
+    - Close
+    - High
+    - Low
+    - Volume
+    - Debt-Equity
+    - EPS (trailing)
+    - Current Ratio
+    - Quick Ratio
+    - ROE
+    - NPM
+    - P/E Ratio (trailing)
+    - MACD
+    - SMA
+    - EMA
+    - Bollinger Band Low
+    - Bollinger Band High
+
+- Below are the Following Algorithm Category and goals of each:
+    - Linear Regression:
+    - Logistic Regression:
+    - Deep Learning:
+        - Simple RNN:
+        - LSTM RNN:
+        - Wave Net:
+        - CNN:
+        - CNN/RNN Hybrid:
+    - SVM?

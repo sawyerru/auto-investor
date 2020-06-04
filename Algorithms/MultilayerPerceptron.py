@@ -25,13 +25,9 @@ def run():
     model = create_model()
     model.fit(X_train, y_train, epochs=1000, verbose=1)
 
-    prediction = []
     for i in range(len(X_test)):
         x_input = X_test[i].reshape((1,3))
         yhat = model.predict(x_input, verbose=0)
-        prediction.append(yhat)
-        print("Predicted: {} \nActual:    {}".format(yhat, y_test[i]))
 
     # mse = tf.keras.losses.MSE(y_test, np.asarray(prediction))
-    loss = np.mean(np.square(y_test-np.asarray(prediction)))
-    print(loss)
+    return "loss"

@@ -1,4 +1,0 @@
-FROM tensorflow/serving
-RUN pip install -r requirements.txt
-COPY ./requirements.txt /requirements.txt
-CMD ["python","./Scripts/Main.py"]

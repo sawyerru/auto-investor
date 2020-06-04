@@ -2,6 +2,7 @@ import requests
 import datetime as dt
 import yahooquery as yq
 import fbchat
+import twilio.rest as twilio
 
 
 
@@ -24,19 +25,25 @@ def send_update(body):
     :return: send notification to FB Messenger
     """
     # Logging into Bot
-    client = fbchat.Client(email="3076319202", password="Ruben-5AW")
-    datetime = get_current_timestep()
-    text = datetime['full'] + '\t\n\n'
-    text += body
+    try:
+        client = fbchat.Client(email="3076319202", password="Ruben-5AW")
+        datetime = get_current_timestep()
+        text = datetime['full'] + '\t\n\n'
+        text += body
 
-    # Personal FB UID (Sawyer Ruben)
-    UID = 100005957644239
-    client.send(fbchat.Message(text=text), thread_id=UID, thread_type=fbchat.ThreadType.USER)
-    client.logout()
+        # Personal FB UID (Sawyer Ruben)
+        UID = 100005957644239
+        client.send(fbchat.Message(text=text), thread_id=UID, thread_type=fbchat.ThreadType.USER)
+        client.logout()
 
+    except:
+        account_sid = 'AC2166d72c156e245ac17fdee2a57f1f72'
+        auth_token = '843869672ac223bbf0161df2706f98e3'
+        client = twilio.Client(account_sid, auth_token)
 
-
-
-
-
+        message = client.messages.create(
+            body="ERROR logging into Albert Facebook",
+            from_='+12092314126',
+            to='+13076319202'
+        )
 

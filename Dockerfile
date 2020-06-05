@@ -17,4 +17,4 @@ CMD ["py","-u", "Main.py"]
 # docker build -t '<NAME>' .
 
 # RUN WITH:
-# docker run --env-file ./env.list -d
+# docker run --env.list-file ./env.list.list -d

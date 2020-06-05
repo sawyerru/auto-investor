@@ -51,6 +51,5 @@ def main():
             Service.send_update("Markets are closed today")
 
 
-
 if __name__ == "__main__":
     main()

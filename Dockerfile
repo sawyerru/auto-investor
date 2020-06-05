@@ -1,5 +1,5 @@
-# Base image is python 3.7
-FROM python:3.7
+# Base image is python 3.5 using conda package manager
+FROM continuumio/miniconda3
 
 WORKDIR /usr/src/app
 

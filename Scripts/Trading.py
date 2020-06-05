@@ -1,4 +1,5 @@
 from robin_stocks import *
+import os
 
 def connect_to_trading():
     print("Connected to Robinhood")

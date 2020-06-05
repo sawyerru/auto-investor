@@ -3,6 +3,7 @@ import datetime as dt
 import yahooquery as yq
 import fbchat
 import twilio.rest as twilio
+import os
 
 
 
@@ -24,9 +25,12 @@ def send_update(body):
     :param body: text to be send
     :return: send notification to FB Messenger
     """
+
+    fb_username = os.getenv("FB_USRNAME")
+    fb_password = os.getenv("FB_PASSWORD")
     # Logging into Bot
     try:
-        client = fbchat.Client(email="3076319202", password="Ruben-5AW")
+        client = fbchat.Client(email=fb_username, password=fb_password)
         datetime = get_current_timestep()
         text = datetime['full'] + '\t\n\n'
         text += body

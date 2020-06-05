@@ -6,6 +6,7 @@ import Algorithms.MultilayerPerceptron as MLP
 import time
 import datetime as dt
 import holidays
+import os
 
 def day_end():
     # Connect to DB
@@ -44,6 +45,7 @@ def main():
             prediction = day_end()  # execute at 17:00
             # time.sleep(60*60*16)     # wait for 60seconds * 60minutes * 16hours
             day_start(prediction)   # execute at 9:00
+            print(os.environ)
 
         else:
             Service.send_update("Markets are closed today")

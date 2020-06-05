@@ -1,16 +1,21 @@
 # Base image is python 3.5 using conda package manager
-FROM python:3.7
+FROM continuumio/miniconda3
 
 WORKDIR /usr/src/app
 
 # Copy requirements to Docker image and install all
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+COPY environ.yml .
+RUN conda env create -f environment.yml
+
+# Make RUN commands use the new environment:
+SHELL ["conda", "run", "-n", "magical", "/bin/bash", "-c"]
+RUN conda env list
 
 COPY Scripts/ .
 COPY Algorithms/ .
+COPY Main.py .
 
-CMD ["py","-u", "Main.py"]
+ENTRYPOINT ["conda", "run", "-n", "magical", "python", "run.py"]
 
 
 # BUILD WITH:

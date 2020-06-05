@@ -17,7 +17,7 @@ def day_end():
     # Create prediction
     Database.connect_to_db()
     prediction = MLP.run()
-    Service.send_update("day end work")
+    # Service.send_update("day end work")
     return prediction
 
 
@@ -27,7 +27,7 @@ def day_start(prediction):
     # Initiate Trade logic
     Trading.connect_to_trading()
     # Trade
-    Service.send_update("day start work")
+    # Service.send_update("day start work")
     return
 
 

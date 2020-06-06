@@ -12,36 +12,3 @@ COPY Algorithms/ .
 COPY Main.py .
 
 CMD ["py", "-u", "Main.py"]
-
-
-#ENTRYPOINT ["conda", "run", "-n", "magical", "python", "run.py"]
-
-
-# BUILD WITH:
-# docker build -t '<NAME>' .
-
-# RUN WITH:
-# docker run --env.list-file ./env.list.list -d
-
-#FROM continuumio/miniconda3
-#
-#WORKDIR /app
-#
-## Create the environment:
-#COPY environment.yml .
-#RUN conda env create -f environment.yml
-#
-#COPY Scripts/ .
-#COPY Algorithms/ .
-#COPY Main.py .
-#
-## Make RUN commands use the new environment:
-#SHELL ["conda", "run", "-n", "magical", "/bin/bash", "-c"]
-#
-## Make sure the environment is activated:
-##RUN echo "Make sure flask is installed:"
-##RUN python -c "import flask"
-#
-## The code to run when container is started:
-#COPY run.py .
-#ENTRYPOINT ["conda", "run", "-n", "magical", "python", "Main.py"]

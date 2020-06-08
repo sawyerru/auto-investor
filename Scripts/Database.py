@@ -1,13 +1,20 @@
 from pymongo import MongoClient
+import os
 
 
-# DB_CONNECTION_STRING = "mongodb+srv://sruben:Ruben-5AW@cluster0-jr48x.mongodb.net/test?retryWrites=true&w=majority"
-# DB = MongoClient(DB_CONNECTION_STRING).financials
+def connect_to_db(message):
+
+    try:
+        client = MongoClient("mongodb://{user}:{password}@{host}:{port}/test".format(
+            user=os.getenv("MONGO_USER"),
+            password=os.getenv("MONGO_PASSWORD"),
+            host=os.getenv("MONGO_HOST"),
+            port=os.getenv("MONGO_PORT")))
+        db = client.test
+        message += "MONGO CONNECTED SUCCESSFULLY\n"
+        return db
+
+    except:
+        message += "Connection Error Occurred During Mongo Open\n"
 
 
-def connect_to_db():
-    # cnx = mysql.connector.connect(user='sawyerru', password='Ruben-5AW',
-    #                               host='127.0.0.1',
-    #                               database='fin')
-    # return cnx
-    print("Connected to MySQL")

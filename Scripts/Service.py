@@ -6,6 +6,11 @@ import twilio.rest as twilio
 import os
 
 
+def pull_day(message):
+    ticker = yq.Ticker('SABR')
+    data = ticker.history(period='5y', interval='1d')
+    message += "SUCCESSFULLY RETRIEVED DATA FROM YAHOO\n"
+    return data
 
 def get_current_timestep():
     d = dt.datetime.now()
@@ -25,29 +30,27 @@ def send_update(body):
     :param body: text to be send
     :return: send notification to FB Messenger
     """
-
-    fb_username = os.getenv("FB_USRNAME")
-    fb_password = os.getenv("FB_PASSWORD")
     # Logging into Bot
     try:
-        client = fbchat.Client(email=fb_username, password=fb_password)
+        client = fbchat.Client(email=os.getenv("FB_USERNAME"),
+                               password=os.getenv("FB_PASSWORD"))
         datetime = get_current_timestep()
         text = datetime['full'] + '\t\n\n'
         text += body
 
         # Personal FB UID (Sawyer Ruben)
-        UID = 100005957644239
+        UID = int(os.getenv("FB_UID"))
         client.send(fbchat.Message(text=text), thread_id=UID, thread_type=fbchat.ThreadType.USER)
         client.logout()
 
     except:
-        account_sid = 'AC2166d72c156e245ac17fdee2a57f1f72'
-        auth_token = '843869672ac223bbf0161df2706f98e3'
+        account_sid = os.getenv('TWILIO_ACC_SID')
+        auth_token = os.getenv('TWILIO_AUTH_TOKEN')
         client = twilio.Client(account_sid, auth_token)
 
         message = client.messages.create(
             body="ERROR logging into Albert Facebook",
             from_='+12092314126',
-            to='+13076319202'
+            to=os.getenv('PHONE')
         )
 

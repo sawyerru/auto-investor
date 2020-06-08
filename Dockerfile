@@ -1,4 +1,3 @@
-## Base image is python 3.5 using conda package manager
 FROM python:3.7
 
 WORKDIR /usr/src/app

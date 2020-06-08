@@ -1,5 +1,5 @@
 import tensorflow as tf
-import numpy as np
+import time
 from Algorithms.Nucleus import *
 
 
@@ -19,15 +19,22 @@ def create_model():
     return model
 
 
-def run():
+def run(prediction, message):
+    # Data Arrangement
     X, y = transform(get_data())
     X_train, X_test, y_train, y_test = split(X, y)
     model = create_model()
+
+    # Train Model
+    start = time.perf_counter()
     model.fit(X_train, y_train, epochs=1000, verbose=1)
+    end = time.perf_counter()
 
-    for i in range(len(X_test)):
-        x_input = X_test[i].reshape((1,3))
-        yhat = model.predict(x_input, verbose=0)
+    # Create Prediction
+    x_input = X_test[len(X_test)-1].reshape((1, 3))
+    prediction = model.predict(x_input, verbose=0)
 
-    # mse = tf.keras.losses.MSE(y_test, np.asarray(prediction))
-    return "loss"
+    # Format Logging
+    message += "MLP Model trained in {:.5f} seconds\n".format(start-end)
+    message += "MLP Model Loss: {}\n".format(model.loss)
+    message += "MLP Prediction: ${}\n".format(prediction)

@@ -48,8 +48,8 @@ def main():
 
     # Schedule operations and define shared variables
     prediction = None
-    schedule.every().day().at("9:15").do(day_start, prediction)
-    schedule.every().day().at("4:30").do(day_end, prediction)
+    schedule.every().day.at("09:15").do(day_start, prediction)
+    schedule.every().day.at("16:30").do(day_end, prediction)
 
 
     while True:

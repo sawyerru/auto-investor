@@ -1,4 +1,5 @@
 from pymongo import MongoClient
+import pandas as pd
 import os
 
 
@@ -17,4 +18,7 @@ def connect_to_db(message):
     except:
         message += "Connection Error Occurred During Mongo Open\n"
 
-
+def retrieve_data(db):
+    data = db.test
+    data = pd.DataFrame(list(data.find()))
+    return data

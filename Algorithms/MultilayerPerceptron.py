@@ -19,7 +19,7 @@ def create_model():
     return model
 
 
-def run(prediction, message):
+def run(X, prediction):
     # Data Arrangement
     X, y = transform(get_data())
     X_train, X_test, y_train, y_test = split(X, y)
@@ -35,6 +35,7 @@ def run(prediction, message):
     prediction = model.predict(x_input, verbose=0)
 
     # Format Logging
-    message += "MLP Model trained in {:.5f} seconds\n".format(start-end)
-    message += "MLP Model Loss: {}\n".format(model.loss)
-    message += "MLP Prediction: ${}\n".format(prediction)
+    log = """MLP Model trained in {:.5f} seconds\n
+             MLP Model Loss: {}\n
+             MLP Prediction: ${}\n""".format(start-end, model.loss, prediction)
+    return prediction, log

@@ -6,11 +6,10 @@ import twilio.rest as twilio
 import os
 
 
-def pull_day(message):
+def pull_day(today):
     ticker = yq.Ticker('SABR')
     data = ticker.history(period='5y', interval='1d')
-    message += "SUCCESSFULLY RETRIEVED DATA FROM YAHOO\n"
-    return data
+    return data, "SUCCESSFULLY RETRIEVED DATA FROM YAHOO\n"
 
 def get_current_timestep():
     d = dt.datetime.now()

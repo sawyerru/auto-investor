@@ -57,4 +57,5 @@ $ docker build -t 'auto-invest' .
 $ docker run -d --env-file env.txt --name trading auto-invest:latest
 
 # Mongo
-$ mongoimport --type csv -d financials -c SABR --headerline --drop SABR.csv
+> use financials
+> mongoimport --type csv -d financials -c SABR --headerline --drop SABR.csv

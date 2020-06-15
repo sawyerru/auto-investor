@@ -1,6 +1,6 @@
 import tensorflow as tf
 import numpy as np
-from AlgorithmsOLD.Nucleus import *
+from Algorithms.Nucleus import *
 
 
 def split(X, y, amt=300):

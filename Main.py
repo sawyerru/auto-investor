@@ -11,21 +11,20 @@ import time
 import schedule
 import datetime as dt
 import random
-import holidays
+
 import os
+import sys
 
 
 def day_start(prediction):
-    today = dt.datetime.now()
+    today = dt.datetime.today()
 
-    # Is Trading Day (is weekday and not holiday)
-    if dt.date(today.year, today.month, today.day).isoweekday() <= 5 and \
-            dt.date(today.year, today.month, today.day) not in holidays.UnitedStates():
+    if Service.is_trading_day(today):
 
         message = "Trading Day beginning:\n\n"
         # read prediction and previous price
-        prev_close = Service.pull_day(today - 1)
-        message += "Predicted Close: ${:.2f} \n Previous Close: ${:.2f}".format(prediction, prev_close)
+        prev_close, m = Service.get_prev_trading_day_from(today)
+        message += "Predicted Close: ${:.2f} \n Previous Close: ${:.2f}\n".format(prediction, prev_close)
 
         # Initiate Trade logic
         m = Trading.connect_to_trading()
@@ -33,11 +32,11 @@ def day_start(prediction):
 
         # Price decrease, we sell in the morning before the slide
         if prediction < prev_close:
-            m = Trading.sell()
+            # m = Trading.sell()
             message += m
         # Price increase, we buy in the morning before the climb
         if prediction > prev_close:
-            m = Trading.buy()
+            # m = Trading.buy()
             message += m
 
         Service.send_update(message)
@@ -47,23 +46,22 @@ def day_start(prediction):
 
 
 def day_end(prediction):
-    today = dt.datetime.now()
+    today = dt.datetime.today()
 
     # Is Trading Day (is weekday and not holiday)
-    if dt.date(today.year, today.month, today.day).isoweekday() <= 5 and \
-            dt.date(today.year, today.month, today.day) not in holidays.UnitedStates():
+    if Service.is_trading_day(today):
 
         message = "Trading Day completed:\n\n"
         # Display day close and day prediction:
-        close_data = Service.pull_day(today)
-        message += "Predicted Close: ${:.2f} \n Closed At: ${:.2f}".format(prediction, close_data['adjclose'])
+        prev_close = Service.get_prev_trading_day_from(day=today, adjclose=True)
+        message += "Predicted Close: ${:.2f} \n Closed At: ${:.2f}".format(prediction, prev_close)
 
         # Connect to Database Server
         col, m = Database.connect_to_db()
         message += m
 
         # Pull Data from yahoo and write to Database
-        m = Database.write(close_data)
+        m = Database.write(Service.get_prev_trading_day_from(day=today, adjclose=False))
         message += m
 
         # Retrieve Features in arranged data and Train Model
@@ -78,16 +76,14 @@ def day_end(prediction):
 def main():
 
     # Gather All Environment Variables into system
-    # file = open('env.txt', 'r')
-    # for line in file:
-    #     obj = line.strip('\n').split('=')
-    #     if len(obj) == 2:
-    #         os.environ[obj[0]] = obj[1]
-    #     # if len(obj) == 1:
-    #     #     print("Error with environment variable file, be sure to fill out all fields")
-    #     #     raise ValueError
+    file = open(sys.argv[1], 'r')
+    for line in file:
+        obj = line.strip('\n').split('=')
+        if len(obj) == 2:
+            os.environ[obj[0]] = obj[1]
 
     print("Started at: ", dt.datetime.now())
+    print(os.environ)
 
     # Schedule operations and define shared variables
     prediction = 0

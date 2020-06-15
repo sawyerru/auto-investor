@@ -4,11 +4,28 @@ import yahooquery as yq
 import fbchat
 import twilio.rest as twilio
 import os
+import holidays
+import pandas as pd
+import json
+
+TICKER = 'SABR'
 
 
-def pull_day(today):
-    ticker = yq.Ticker('SABR')
-    data = ticker.history(period='5y', interval='1d')
+def is_trading_day(today):
+    return (dt.date(today.year, today.month, today.day).isoweekday() <= 5 and
+    dt.date(today.year, today.month, today.day) not in holidays.UnitedStates())
+
+
+def get_prev_trading_day_from(day=None, adjclose=False):
+    ticker = yq.Ticker(TICKER)
+
+    # go back in time to find previous trading day
+    day = day - dt.timedelta(days=1)
+    while not is_trading_day(day):
+        day = day - dt.timedelta(days=1)
+
+    data = ticker.history(start=day, end=day+dt.timedelta(days=1), period='1d') if day else ticker.history(period='5y')
+    data = data['adjclose'].array[0] if adjclose else data
     return data, "SUCCESSFULLY RETRIEVED DATA FROM YAHOO\n"
 
 def get_current_timestep():
@@ -30,15 +47,19 @@ def send_update(body):
     :return: send notification to FB Messenger
     """
     # Logging into Bot
+    cookies = {}
     try:
         client = fbchat.Client(email=os.getenv("FB_USERNAME"),
-                               password=os.getenv("FB_PASSWORD"))
+                               password=os.getenv("FB_PASSWORD"),
+                               session_cookies=cookies)
         datetime = get_current_timestep()
         text = datetime['full'] + '\t\n\n'
         text += body
 
         # Personal FB UID (Sawyer Ruben)
         UID = int(os.getenv("FB_UID"))
+        with open('session.json', 'w') as f:
+            json.dump(client.getSession(), f)
         client.send(fbchat.Message(text=text), thread_id=UID, thread_type=fbchat.ThreadType.USER)
         client.logout()
 

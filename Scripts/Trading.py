@@ -4,8 +4,7 @@ import os
 
 def connect_to_trading():
     try:
-        access_token = login(os.getenv("ROBINHOOD_USERNAME"),
-                         os.getenv("ROBINHOOD_PASSWORD"))['access_token']
+        access_token = authentication.login(os.getenv("ROBINHOOD_USERNAME"), os.getenv("ROBINHOOD_PASSWORD"))['access_token']
         if bool(access_token):
             return "ROBINHOOD CONNECTION SUCCESSFUL"
     except:
@@ -23,5 +22,5 @@ def sell():
 
 
 def logout():
-    logout()
+    authentication.logout()
 
